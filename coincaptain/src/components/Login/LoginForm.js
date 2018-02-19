@@ -5,6 +5,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import Database from '../../database/Database';
 import { genericAlert, genericErrorAlert, genericErrorDescriptionAlert, genericRequiredFieldAlert } from '../../utils/genericAlerts';
+import spinnerFunction from '../../utils/spinnerFunction';
 
 export default class LoginForm extends Component {
 
@@ -58,7 +59,9 @@ export default class LoginForm extends Component {
             await Database.login (username, password, () => {
                 console.log ("success function");
             }, () => {
-                genericErrorAlert ("Unable to login");
+                spinnerFunction ( () => {
+                    genericErrorAlert ("Unable to login")
+                });
                 console.log ("failure function");
             });
 

@@ -3,6 +3,8 @@ import { Alert } from 'react-native';
 
 import * as firebase from "firebase";
 
+import spinnerFunction from '../utils/spinnerFunction';
+
 const config = {
     apiKey: "AIzaSyDpJQwIZE3ze6nn8sM_ArQ2aabFWxlWQe0",
     authDomain: "coinmaster-401f2.firebaseapp.com",
@@ -89,43 +91,52 @@ export default class Database {
     
     static async notifySignupVerficiation () {
         if (!Database.checkUserVerfied ()) {
-            Alert.alert (
-                'Verification Email Sent',
-                'Please check email',
-                [
-                    {
-                        text : 'Resend email', onPress : () => {
-                            Database.sendVerificationEmail ();
-                        }
-                    },
-                    {
-                        text : 'Okay', onPress : () => {
-                            console.log ('Okay pressed');
-                        }
-                    }
-                ]
-            )
+            spinnerFunction (
+                () => {
+                    Alert.alert (
+                        'Verification Email Sent',
+                        'Please check email',
+                        [
+                            {
+                                text : 'Resend email', onPress : () => {
+                                    Database.sendVerificationEmail ();
+                                }
+                            },
+                            {
+                                text : 'Okay', onPress : () => {
+                                    console.log ('Okay pressed');
+                                }
+                            }
+                        ]
+                    )
+                }
+            );
         }
     }
 
     static async notifyUserVerification () {
         if (!Database.checkUserVerfied ()) {
-            Alert.alert (
-                'User not verified',
-                'Please verify email',
-                [
-                    {
-                        text : 'Resend email', onPress : () => {
-                            Database.sendVerificationEmail ();
-                        }
-                    },
-                    {
-                        text : 'Okay', onPress : () => {
-                            console.log ('Okay pressed');
-                        }
-                    }
-                ]
-            )
+            spinnerFunction (
+                () => {
+                    Alert.alert (
+                        'User not verified',
+                        'Please verify email',
+                        [
+                            {
+                                text : 'Resend email', onPress : () => {
+                                    Database.sendVerificationEmail ();
+                                }
+                            },
+                            {
+                                text : 'Okay', onPress : () => {
+                                    console.log ('Okay pressed');
+                                }
+                            }
+                        ]
+                    )
+                }
+            );
+            
         }
     }
 
