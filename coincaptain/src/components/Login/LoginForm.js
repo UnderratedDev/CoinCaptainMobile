@@ -4,7 +4,7 @@ import { AppRegistry, View, Text, TextInput, TouchableOpacity, StatusBar, StyleS
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import Database from '../../database/Database';
-import genericAlert from '../../utils/genericAlert';
+import { genericAlert, genericErrorAlert, genericErrorDescriptionAlert, genericRequiredFieldAlert } from '../../utils/genericAlerts';
 
 export default class LoginForm extends Component {
 
@@ -38,24 +38,34 @@ export default class LoginForm extends Component {
             console.log (password);
 
             if (username === "" && password === "") {
-                genericAlert ("Required Field", "Please enter an username and password");
+                genericRequiredFieldAlert ("Please enter an username and password");
                 return;
-            } else if (username === "") {
-                genericAlert ("Required Field", "Please enter a username");
-                return;
-            } else if (password === "") {
-                genericAlert ("Required Field", "Please enter a password");
-                return;
+            } else {
+                field = "";
+
+                if (username === "")
+                    field = "username";
+                else if (password === "")
+                    field = "password";
+
+                if (field !== "") {
+                    genericRequiredFieldAlert (field);
+                    return;
+                }
             }
 
+            // using await keeps it in the try allowing the spinner to keep spinning
             await Database.login (username, password, () => {
                 console.log ("success function");
             }, () => {
+                genericErrorAlert ("Unable to login");
                 console.log ("failure function");
             });
 
         } catch (error) {
-            genericAlert ("Whoops!", error.response.data.error_description);
+            console.warn (error);
+            genericErrorDescriptionAlert (error);
+            // throw error;
         } finally {
             if (this.mounted)
                 this.setState ({
@@ -73,7 +83,8 @@ export default class LoginForm extends Component {
                     textContent = { "Loading..." }
                     textStyle = {
                         { color : '#FFF' }
-                    } />
+                    }
+                />
 
                 <StatusBar 
                     barStyle = 'light-content'
