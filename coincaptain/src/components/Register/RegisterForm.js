@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { AppRegistry, View, Text, TextInput, TouchableOpacity, StatusBar, StyleSheet } from 'react-native';
 
+import Spinner from 'react-native-loading-spinner-overlay';
+
 import Database from '../../database/Database';
+import { genericAlert, genericErrorAlert, genericErrorDescriptionAlert, genericRequiredFieldAlert } from '../../utils/genericAlerts';
 
 export default class RegisterForm extends Component {
 
@@ -11,67 +14,121 @@ export default class RegisterForm extends Component {
             username        : '',
             password        : '',
             confirmPassword : '',
+            loading         : false,
         };
     }
 
-    registerUser = () => {
-        const { username, password, confirmPassword } = this.state;
-        console.log (username);
-        console.log (password);
-        console.log (confirmPassword);
-        Database.signup (username, password, (user) => {
-            console.log ('success function');
-            console.log (user);
-        }, () => {
-            console.log ('failure function');
-        });
+    async componentWillUnmount () {
+        this.mounted = false;
+    }
+
+    async componentDidMount () {
+        this.mounted = true;
+    }
+
+    _register = async () => {
+        try {
+            this.setState ({
+                loading : true
+            });
+
+            const { username, password, confirmPassword } = this.state;
+            console.log (username);
+            console.log (password);
+            console.log (confirmPassword);
+
+            if (username === "" && password === "" && confirmPassword === "") {
+                genericRequiredFieldAlert ("Please enter an username, password and confirm password");
+                return;
+            } else {
+                field = "";
+
+                if (username === "") {
+                    field = "username";
+                } else if (password === "") {
+                    field = "password";
+                } else if (confirmPassword === "") {
+                   field = "confirm password";
+                } else if (password !== confirmPassword) {
+                   genericAlert ("Mismatch", "Password and confirm password do not match");
+                   return;
+                }
+
+                if (field !== "") {
+                    genericRequiredFieldAlert (field);
+                    return;
+                }
+            }
+
+            Database.signup (username, password, (user) => {
+                console.log ('success function');
+                console.log (user);
+            }, () => {
+                console.log ('failure function');
+                genericErrorAlert ("Could not create the account");
+            });
+        } catch (error) {
+            console.warn (error);
+            genericErrorDescriptionAlert (error);
+            // throw error;
+        } finally {
+            if (this.mounted)
+                this.setState ({
+                    loading : false
+                })
+        }
     }
 
     render () {
         return (
             <View style = { styles.container }>
 
-                <StatusBar 
-                    barStyle = 'light-content'
+                <Spinner
+                    visible = { this.state.loading }
+                    textContent = { "Loading..." }
+                    textStyle = {
+                        { color : '#FFF' }
+                    } 
                 />
 
-                    <TextInput
-                        placeholder = 'username or email'
-                        placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
-                        returnKeyType = 'next'
-                        value = { this.state.username }
-                        onChangeText = { username => this.setState ( { username } ) }
-                        onSubmitEditing = { () => this.passwordInput.focus () }
-                        keyboardType = 'email-address'
-                        autoCapitalize = 'none'
-                        autoCorrect = { false }
-                        style = { styles.input } />
-                        
-                    <TextInput
-                        placeholder = 'password'
-                        placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
-                        returnKeyType = 'go'
-                        value = { this.state.password }
-                        onChangeText = { password => this.setState ( { password } ) }
-                        onSubmitEditing = { () => this.confirmPasswordInput.focus () }
-                        style = { styles.input } 
-                        ref = { (input) => this.passwordInput = input }
-                        secureTextEntry />
 
-                    <TextInput
-                        placeholder = 'confirm password'
-                        placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
-                        returnKeyType = 'go'
-                        value = { this.state.confirmPassword }
-                        onChangeText = { confirmPassword => this.setState ( { confirmPassword } ) }
-                        onSubmitEditing = { this.registerUser }
-                        style = { styles.input } 
-                        ref = { (input) => this.confirmPasswordInput = input }
-                        secureTextEntry />
+                <TextInput
+                    placeholder = 'username or email'
+                    placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
+                    returnKeyType = 'next'
+                    value = { this.state.username }
+                    onChangeText = { username => this.setState ( { username } ) }
+                    onSubmitEditing = { () => this.passwordInput.focus () }
+                    keyboardType = 'email-address'
+                    autoCapitalize = 'none'
+                    autoCorrect = { false }
+                    style = { styles.input } />
+                    
+                <TextInput
+                    placeholder = 'password'
+                    placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
+                    returnKeyType = 'go'
+                    value = { this.state.password }
+                    onChangeText = { password => this.setState ( { password } ) }
+                    onSubmitEditing = { () => this.confirmPasswordInput.focus () }
+                    style = { styles.input } 
+                    ref = { (input) => this.passwordInput = input }
+                    secureTextEntry />
 
-                    <TouchableOpacity onPress = { this.registerUser } style = { styles.buttonContainer }>
-                        <Text style = { styles.buttonText }>Register</Text>
-                    </TouchableOpacity>
+                <TextInput
+                    placeholder = 'confirm password'
+                    placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
+                    returnKeyType = 'go'
+                    value = { this.state.confirmPassword }
+                    onChangeText = { confirmPassword => this.setState ( { confirmPassword } ) }
+                    onSubmitEditing = { this.registerUser }
+                    style = { styles.input } 
+                    ref = { (input) => this.confirmPasswordInput = input }
+                    secureTextEntry />
+
+                <TouchableOpacity onPress = { this._register } style = { styles.buttonContainer }>
+                    <Text style = { styles.buttonText }>Register</Text>
+                </TouchableOpacity>
 
             </View>
         );
