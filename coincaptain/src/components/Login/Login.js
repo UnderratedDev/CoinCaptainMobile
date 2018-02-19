@@ -20,7 +20,7 @@ export default class Login extends Component {
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress = { () => { DismissKeyboard() } }>
-                    <View style = { styles.formContainer }>
+                    <View>
                         <LoginForm />
                         <TouchableOpacity onPress = { () => {
                             navigate("Register");
@@ -45,7 +45,7 @@ const styles = StyleSheet.create ({
         flexGrow : 1,
         justifyContent : 'center'
     },
-      logo : {
+    logo : {
           width : 100,
           height : 100
     },
