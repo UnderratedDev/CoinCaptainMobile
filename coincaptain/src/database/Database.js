@@ -102,8 +102,7 @@ export default class Database {
     }
 
     static async login(email, pass, successCallback, failureCallback) {
-        await firebase.auth().
-            signInWithEmailAndPassword(email, pass).then (function (user) {
+        await firebase.auth().signInWithEmailAndPassword(email, pass).then (function (user) {
                 console.log("Logged in");
                 console.log(user);
                 console.log(user.emailVerified);
