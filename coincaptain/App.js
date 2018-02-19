@@ -32,12 +32,6 @@ export default class App extends React.Component {
                 backgroundColor : '#3498db'
               }
             } />
-            /* <StatusBar 
-              translucent
-              backgroundColor = { 'blue' }
-              barStyle = 'default'
-              hidden = { false }
-            />  */
           }
           { this.state.loggedIn ? <TabNavigation /> : <StackNavigation /> }
         </View>
