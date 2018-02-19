@@ -79,32 +79,32 @@ export default class LoginForm extends Component {
                     barStyle = 'light-content'
                 />
 
-                    <TextInput
-                        placeholder = 'username or email'
-                        placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
-                        returnKeyType = 'next'
-                        value = { this.state.username }
-                        onChangeText = { username => this.setState ( { username } ) }
-                        onSubmitEditing = { () => this.passwordInput.focus () }
-                        keyboardType = 'email-address'
-                        autoCapitalize = 'none'
-                        autoCorrect = { false }
-                        style = { styles.input } />
-                        
-                    <TextInput
-                        placeholder = 'password'
-                        placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
-                        returnKeyType = 'go'
-                        value = { this.state.password }
-                        onChangeText = { password => this.setState ( { password } ) }
-                        onSubmitEditing = { this.loginUser }
-                        style = { styles.input } 
-                        ref = { (input) => this.passwordInput = input }
-                        secureTextEntry />
+                <TextInput
+                    placeholder = 'username or email'
+                    placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
+                    returnKeyType = 'next'
+                    value = { this.state.username }
+                    onChangeText = { username => this.setState ( { username } ) }
+                    onSubmitEditing = { () => this.passwordInput.focus () }
+                    keyboardType = 'email-address'
+                    autoCapitalize = 'none'
+                    autoCorrect = { false }
+                    style = { styles.input } />
+                    
+                <TextInput
+                    placeholder = 'password'
+                    placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
+                    returnKeyType = 'go'
+                    value = { this.state.password }
+                    onChangeText = { password => this.setState ( { password } ) }
+                    onSubmitEditing = { this.loginUser }
+                    style = { styles.input } 
+                    ref = { (input) => this.passwordInput = input }
+                    secureTextEntry />
 
-                    <TouchableOpacity onPress = { this._login } style = { styles.buttonContainer }>
-                        <Text style = { styles.buttonText }>Login</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity onPress = { this._login } style = { styles.buttonContainer }>
+                    <Text style = { styles.buttonText }>Login</Text>
+                </TouchableOpacity>
 
             </View>
         );
