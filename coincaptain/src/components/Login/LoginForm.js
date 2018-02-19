@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { AppRegistry, View, Text, TextInput, TouchableOpacity, StatusBar, StyleSheet } from 'react-native';
 
+import Spinner from 'react-native-loading-spinner-overlay';
+
 import Database from '../../database/Database';
+import genericAlert from '../../utils/genericAlert';
 
 export default class LoginForm extends Component {
 
@@ -9,24 +12,68 @@ export default class LoginForm extends Component {
         super();
         this.state = {
             username : '',
-            password : ''
+            password : '',
+            loading  : false,
         };
     }
+
+    async componentWillUnmount () {
+        this.mounted = false;
+    }
+
+    async componentDidMount () {
+        this.mounted = true;
+    }
    
-    loginUser = () => {
-        const { username, password } = this.state;
-        console.log (username);
-        console.log (password);
-        Database.login (username, password, () => {
-            console.log ("success function");
-        }, () => {
-            console.log ("failure function");
-        });
+    _login = async () => {
+        try {
+            this.setState ({
+                loading : true
+            });
+
+            console.log (this.state.loading);
+
+            const { username, password } = this.state;
+            console.log (username);
+            console.log (password);
+
+            if (username === "" && password === "") {
+                genericAlert ("Required Field", "Please enter an username and password");
+                return;
+            } else if (username === "") {
+                genericAlert ("Required Field", "Please enter a username");
+                return;
+            } else if (password === "") {
+                genericAlert ("Required Field", "Please enter a password");
+                return;
+            }
+
+            await Database.login (username, password, () => {
+                console.log ("success function");
+            }, () => {
+                console.log ("failure function");
+            });
+
+        } catch (error) {
+            genericAlert ("Whoops!", error.response.data.error_description);
+        } finally {
+            if (this.mounted)
+                this.setState ({
+                    loading : false
+                })
+        }
     }
 
     render () {
         return (
             <View style = { styles.container }>
+
+                <Spinner
+                    visible = { this.state.loading }
+                    textContent = { "Loading..." }
+                    textStyle = {
+                        { color : '#FFF' }
+                    } />
 
                 <StatusBar 
                     barStyle = 'light-content'
@@ -55,7 +102,7 @@ export default class LoginForm extends Component {
                         ref = { (input) => this.passwordInput = input }
                         secureTextEntry />
 
-                    <TouchableOpacity onPress = { this.loginUser } style = { styles.buttonContainer }>
+                    <TouchableOpacity onPress = { this._login } style = { styles.buttonContainer }>
                         <Text style = { styles.buttonText }>Login</Text>
                     </TouchableOpacity>
 

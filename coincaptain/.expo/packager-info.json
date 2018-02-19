@@ -1,8 +1,8 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 6667,
+  "packagerPid": 16170,
   "expoServerNgrokUrl": "https://pu-5ef.underrateddev.coincaptain.exp.direct",
   "packagerNgrokUrl": "https://packager.pu-5ef.underrateddev.coincaptain.exp.direct",
-  "ngrokPid": 6678
+  "ngrokPid": 16189
 }
