@@ -1,7 +1,9 @@
 import React from 'react';
-import { Alert } from 'react-native';
 
 import * as firebase from "firebase";
+
+import spinnerFunction from '../utils/spinnerFunction';
+import { genericVerificationAlert } from '../utils/genericAlerts';
 
 const config = {
     apiKey: "AIzaSyDpJQwIZE3ze6nn8sM_ArQ2aabFWxlWQe0",
@@ -47,7 +49,9 @@ export default class Database {
             console.log("Account created");
             Database.currentUser = firebase.auth().currentUser;
             Database.sendVerificationEmail ();
-            Database.notifySignupVerficiation ();
+            spinnerFunction ( () => {
+                Database.notifySignupVerficiation ();
+            });
             // use below if wish to store additional information about user
             /* var data = {
                 email: $scope.email,
@@ -88,56 +92,25 @@ export default class Database {
     }
     
     static async notifySignupVerficiation () {
-        if (!Database.checkUserVerfied ()) {
-            Alert.alert (
-                'Verification Email Sent',
-                'Please check email',
-                [
-                    {
-                        text : 'Resend email', onPress : () => {
-                            Database.sendVerificationEmail ();
-                        }
-                    },
-                    {
-                        text : 'Okay', onPress : () => {
-                            console.log ('Okay pressed');
-                        }
-                    }
-                ]
-            )
-        }
+        if (!Database.checkUserVerfied ())
+            genericVerificationAlert ('Verification Email Sent', 'Please check email');
     }
 
     static async notifyUserVerification () {
-        if (!Database.checkUserVerfied ()) {
-            Alert.alert (
-                'User not verified',
-                'Please verify email',
-                [
-                    {
-                        text : 'Resend email', onPress : () => {
-                            Database.sendVerificationEmail ();
-                        }
-                    },
-                    {
-                        text : 'Okay', onPress : () => {
-                            console.log ('Okay pressed');
-                        }
-                    }
-                ]
-            )
-        }
+        if (!Database.checkUserVerfied ())
+            genericVerificationAlert ('User not verified', 'Please verify email');
     }
 
     static async login(email, pass, successCallback, failureCallback) {
-        await firebase.auth().
-            signInWithEmailAndPassword(email, pass).then (function (user) {
+        await firebase.auth().signInWithEmailAndPassword(email, pass).then (function (user) {
                 console.log("Logged in");
                 console.log(user);
                 console.log(user.emailVerified);
 
                 Database.currentUser = user;
-                Database.notifyUserVerification ();
+                spinnerFunction ( () => {
+                    Database.notifyUserVerification ();
+                });
 
                 /* if (!user.emailVerified) {
                     Database.sendVerificationEmail ();

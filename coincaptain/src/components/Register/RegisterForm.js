@@ -65,7 +65,9 @@ export default class RegisterForm extends Component {
                 console.log (user);
             }, () => {
                 console.log ('failure function');
-                genericErrorAlert ("Could not create the account");
+                setTimeout(() => {
+                    genericErrorAlert ("Could not create the account");
+                }, 100);
             });
         } catch (error) {
             console.warn (error);
