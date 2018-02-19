@@ -60,7 +60,7 @@ export default class RegisterForm extends Component {
                 }
             }
 
-            Database.signup (username, password, (user) => {
+            await Database.signup (username, password, (user) => {
                 console.log ('success function');
                 console.log (user);
             }, () => {

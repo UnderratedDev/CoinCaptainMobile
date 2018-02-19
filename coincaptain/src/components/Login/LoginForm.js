@@ -67,10 +67,13 @@ export default class LoginForm extends Component {
             genericErrorDescriptionAlert (error);
             // throw error;
         } finally {
+            console.log (this.mounted);
+            console.log (this.state.loading);
             if (this.mounted)
                 this.setState ({
                     loading : false
                 })
+            console.log (this.state.loading);
         }
     }
 
@@ -84,6 +87,7 @@ export default class LoginForm extends Component {
                     textStyle = {
                         { color : '#FFF' }
                     }
+                    cancelable = { false }
                 />
 
                 <StatusBar 
