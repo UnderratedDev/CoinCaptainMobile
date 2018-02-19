@@ -1,7 +1,11 @@
 import { Alert } from 'react-native';
 
+import Database from '../database/Database';
+
 const ERROR_TITLE = "Whoops!";
 const REQUIRED_FIELD_TITLE = "Required Field";
+const RESEND_EMAIL = "Resend email";
+const OKAY = "Okay";
 
 export const genericAlert = (title, message) => {
 
@@ -12,7 +16,7 @@ export const genericAlert = (title, message) => {
         title, message, 
         [
             {
-                text : 'Okay',
+                text : OKAY,
                 onPress : () => {}
             },
             {
@@ -36,4 +40,25 @@ export const genericErrorDescriptionAlert = (error) => {
 
 export const genericRequiredFieldAlert = (field) => {
     genericAlert (REQUIRED_FIELD_TITLE, `Please enter a ${field}`);
+}
+
+export const genericVerificationAlert = (title, message) => {
+    if (!Database.checkUserVerfied ()) {
+        Alert.alert (
+            title,
+            message,
+            [
+                {
+                    text : RESEND_EMAIL, onPress : () => {
+                        Database.sendVerificationEmail ();
+                    }
+                },
+                {
+                    text : OKAY, onPress : () => {
+                        console.log ('Okay pressed');
+                    }
+                }
+            ]
+        );
+    }
 }
