@@ -6,6 +6,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import Database from '../../database/Database';
 import { genericAlert, genericErrorAlert, genericErrorDescriptionAlert, genericRequiredFieldAlert } from '../../utils/genericAlerts';
 import spinnerFunction from '../../utils/spinnerFunction';
+import { asyncTimeoutFunction } from '../../utils/timedFunctions';
 
 export default class LoginForm extends Component {
 
@@ -56,14 +57,22 @@ export default class LoginForm extends Component {
             }
 
             // using await keeps it in the try allowing the spinner to keep spinning
-            await Database.login (username, password, () => {
-                console.log ("success function");
-            }, () => {
-                spinnerFunction ( () => {
-                    genericErrorAlert ("Unable to login")
+            
+            await asyncTimeoutFunction ( 10000, async () => {
+                await Database.login (username, password, () => {
+                    console.log ("success function");
+                }, () => {
+                    spinnerFunction ( () => {
+                        genericErrorAlert ("Unable to login")
+                    });
+                    console.log ("failure function");
                 });
-                console.log ("failure function");
-            });
+                }, (response) => {
+                    console.log ("Success");
+                }, (error) => {
+                    console.log ("Failure");
+                }
+            );
 
         } catch (error) {
             console.warn (error);
@@ -93,10 +102,6 @@ export default class LoginForm extends Component {
                     cancelable = { false }
                 />
 
-                <StatusBar 
-                    barStyle = 'light-content'
-                />
-
                 <TextInput
                     placeholder = 'username or email'
                     placeholderTextColor = 'rgba(255, 255, 255, 0.7)'
@@ -124,6 +129,16 @@ export default class LoginForm extends Component {
                     <Text style = { styles.buttonText }>Login</Text>
                 </TouchableOpacity>
 
+                <TouchableOpacity onPress = { () => {
+                   asyncTimeoutFunction ( 1000, () => {
+                       genericAlert ("TITLE", "MESSAGE");
+                   }, (response) => {
+                       console.log ("Success");
+                   }, (error) => {
+                       console.log ("Failure");
+                   })
+                }}><Text style = { styles.buttonText }>PRESS ME</Text>
+                </TouchableOpacity>
             </View>
         );
     }

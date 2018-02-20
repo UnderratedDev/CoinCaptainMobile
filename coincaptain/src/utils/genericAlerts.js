@@ -5,6 +5,8 @@ import Database from '../database/Database';
 const ERROR_TITLE = "Whoops!";
 const REQUIRED_FIELD_TITLE = "Required Field";
 const RESEND_EMAIL = "Resend email";
+const DEFAULT_TITLE = "TITLE";
+const DEFAULT_MESSAGE = "MESSAGE";
 const OKAY = "Okay";
 
 export const genericAlert = (title, message) => {
@@ -61,4 +63,8 @@ export const genericVerificationAlert = (title, message) => {
             ]
         );
     }
+}
+
+export const genericDefaultAlert = () => {
+    genericAlert (DEFAULT_TITLE, DEFAULT_MESSAGE)
 }
