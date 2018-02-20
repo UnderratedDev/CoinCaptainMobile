@@ -12,7 +12,7 @@ const OKAY = "Okay";
 export const genericAlert = (title, message) => {
 
     if (title === "" || message === "")
-    return;
+        return;
 
     Alert.alert (
         title, message, 
