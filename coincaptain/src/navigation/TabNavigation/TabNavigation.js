@@ -2,11 +2,15 @@ import React from 'react';
 import { TabNavigator } from 'react-navigation';
 import { Text, View, Image, StyleSheet } from 'react-native';
 
+import { Icon } from 'native-base';
+
 import Login from '../../components/Login/Login';
 import Register from '../../components/Register/Register';
 import Profile from '../../components/Profile/Profile';
 import CoinPrices from '../../components/CoinPrices/CoinPrices';
 import Settings from '../../components/Settings/Settings';
+
+import TabIcon from '../../subcomponents/TabIcon/TabIcon';
 
 const TabNavigation = TabNavigator ({
   Profile : {
@@ -26,11 +30,15 @@ const TabNavigation = TabNavigator ({
     navigationOptions : {
       tabBarLabel : 'Coin Prices',
       tabBarIcon : ({
-        tintColor
+        focused, tintColor
       }) => (
-        <Image 
-          source = { require ('../../../assets/profile.imageset/user_male.png') }
-          style  = { [styles.icon, { tintColor : tintColor }]}
+        <TabIcon
+          iconDefault = "ios-settings"
+          iconFocused = "ios-settings"
+          focused = { focused }
+          tintColor = { tintColor }
+          type = { "IoniconsIcon" }
+          style  = { [styles.icon, { tintColor : tintColor } ] }
         />
       )
     }
@@ -40,11 +48,15 @@ const TabNavigation = TabNavigator ({
     navigationOptions : {
       tabBarLabel : 'Settings',
       tabBarIcon : ({
-        tintColor
+        focused, tintColor
       }) => (
-        <Image 
-          source = { require ('../../../assets/profile.imageset/user_male.png') }
-          style  = { [styles.icon, { tintColor : tintColor }]}
+        <TabIcon
+          iconDefault = "ios-settings-outline"
+          iconFocused = "ios-settings"
+          focused = { focused }
+          tintColor = { tintColor }
+          type = { "IoniconsIcon" }
+          style  = { [styles.icon, { tintColor : tintColor } ] }
         />
       )
     }
@@ -53,7 +65,10 @@ const TabNavigation = TabNavigator ({
   tabBarPosition: 'bottom',
   animationEnabled: true,
   tabBarOptions: {
-    activeTintColor: '#e91e63',
+    activeTintColor : '#e91e63',
+    inactiveTintColor :  'grey',
+    activeBackgroundColor : 'white',
+    inactiveBackgroundColor : 'yellow'
   },
 });
 
