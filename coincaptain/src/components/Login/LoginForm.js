@@ -128,17 +128,6 @@ export default class LoginForm extends Component {
                 <TouchableOpacity onPress = { this._login } style = { styles.buttonContainer }>
                     <Text style = { styles.buttonText }>Login</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity onPress = { () => {
-                   asyncTimeoutFunction ( 1000, () => {
-                       genericAlert ("TITLE", "MESSAGE");
-                   }, (response) => {
-                       console.log ("Success");
-                   }, (error) => {
-                       console.log ("Failure");
-                   })
-                }}><Text style = { styles.buttonText }>PRESS ME</Text>
-                </TouchableOpacity>
             </View>
         );
     }
